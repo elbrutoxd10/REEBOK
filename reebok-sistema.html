@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reebok — Sistema de Ventas y Logística</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg1:#ffffff;--bg2:#f5f5f5;--bg3:#efefef;
+  --txt1:#111111;--txt2:#666666;--txt3:#999999;
+  --brd:#e0e0e0;--brd2:#cccccc;
+  --rad:8px;--rad2:12px;
+  --ok-bg:#e6f4ea;--ok-txt:#1a7f37;
+  --warn-bg:#fff8e1;--warn-txt:#b45309;
+  --err-bg:#fdecea;--err-txt:#c62828;
+  --info-bg:#e8f0fe;--info-txt:#1a56db;
+  --red:#e2001a;--red-dk:#b30014;--red-bg:#fdeaec;
+  --font:'Segoe UI',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg1:#1a1a1a;--bg2:#242424;--bg3:#2e2e2e;
+    --txt1:#f0f0f0;--txt2:#aaaaaa;--txt3:#777777;
+    --brd:#333333;--brd2:#444444;
+    --ok-bg:#0d2b18;--ok-txt:#4ade80;
+    --warn-bg:#2b1f05;--warn-txt:#fbbf24;
+    --err-bg:#2b0d0d;--err-txt:#f87171;
+    --info-bg:#0d1f3c;--info-txt:#60a5fa;
+    --red:#ff3b4e;--red-dk:#e2001a;--red-bg:#3a0d10;
+  }
+}
+body{font-family:var(--font);font-size:14px;color:var(--txt1);background:var(--bg3);min-height:100vh}
+input,select,textarea{padding:7px 10px;border:0.5px solid var(--brd2);border-radius:var(--rad);background:var(--bg1);color:var(--txt1);font-size:13px;width:100%;font-family:var(--font)}
+input:focus,select:focus{outline:2px solid var(--red);border-color:var(--red)}
+.btn{padding:7px 14px;border-radius:var(--rad);border:0.5px solid var(--brd2);background:var(--bg1);cursor:pointer;font-size:13px;color:var(--txt1);display:inline-flex;align-items:center;gap:5px;transition:background .15s;font-family:var(--font)}
+.btn:hover{background:var(--bg2)}
+.btn-p{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-p:hover{background:var(--red-dk)}
+.btn-xs{padding:4px 9px;font-size:12px}
+.btn-d{color:var(--err-txt);border-color:var(--err-txt)}
+.btn-d:hover{background:var(--err-bg)}
+.hdr{background:var(--bg1);border-bottom:0.5px solid var(--brd);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-size:17px;font-weight:800;letter-spacing:3px;color:var(--red);display:inline-flex;align-items:center;gap:6px}
+.logo .ti{font-size:19px}
+.fr{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.nav{display:flex;gap:2px;padding:8px 16px 0;background:var(--bg1);border-bottom:0.5px solid var(--brd);flex-wrap:wrap}
+.nb{padding:7px 11px;border-radius:var(--rad) var(--rad) 0 0;border:none;background:none;cursor:pointer;font-size:12px;color:var(--txt2);display:flex;align-items:center;gap:4px;font-family:var(--font)}
+.nb:hover{background:var(--bg2)}
+.nb.on{background:var(--red-bg);color:var(--red-dk);font-weight:600;border-bottom:2px solid var(--red)}
+.pg{padding:14px;display:flex;flex-direction:column;gap:10px}
+.card{background:var(--bg1);border:0.5px solid var(--brd);border-radius:var(--rad2);padding:13px 15px}
+.ct{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.met{background:var(--bg2);border-radius:var(--rad);padding:11px 13px;text-align:center}
+.mv{font-size:20px;font-weight:500}
+.ml{font-size:11px;color:var(--txt2);margin-top:2px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;border-bottom:0.5px solid var(--brd);font-weight:500;font-size:11px;color:var(--txt2)}
+td{padding:7px 9px;border-bottom:0.5px solid var(--brd)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg2)}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px}
+.p-ok{background:var(--ok-bg);color:var(--ok-txt)}
+.p-w{background:var(--warn-bg);color:var(--warn-txt)}
+.p-d{background:var(--err-bg);color:var(--err-txt)}
+.p-i{background:var(--info-bg);color:var(--info-txt)}
+.p-g{background:var(--bg2);color:var(--txt2)}
+.p-red{background:var(--red-bg);color:var(--red-dk)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.frow{display:flex;flex-direction:column;gap:4px;margin-bottom:9px}
+.frow label{font-size:11px;color:var(--txt2)}
+.sep{border-top:0.5px solid var(--brd);margin:10px 0}
+.empty{text-align:center;padding:22px;color:var(--txt2);font-size:12px}
+.badge{font-size:10px;padding:2px 7px;border-radius:20px;background:var(--red-bg);color:var(--red-dk);font-weight:600}
+.toast{position:fixed;bottom:14px;right:14px;background:var(--bg1);border:0.5px solid var(--brd);border-radius:var(--rad2);padding:10px 15px;font-size:13px;display:flex;align-items:center;gap:7px;opacity:0;transform:translateY(8px);transition:all .22s;pointer-events:none;z-index:9999;box-shadow:0 2px 12px rgba(0,0,0,.1)}
+.toast.on{opacity:1;transform:translateY(0)}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 60px);background:var(--bg3)}
+.lcard{background:var(--bg1);border:0.5px solid var(--brd);border-radius:var(--rad2);padding:28px;width:330px}
+.tabs-h{display:flex;border-bottom:0.5px solid var(--brd);margin-bottom:18px}
+.tab-h{flex:1;padding:9px;text-align:center;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--txt2)}
+.tab-h.on{border-bottom-color:var(--red);color:var(--red-dk);font-weight:600}
+.tc{display:none}.tc.on{display:block}
+.subtabs{display:flex;gap:6px;margin-bottom:12px}
+.subtab-b{flex:1;padding:6px;border-radius:20px;border:0.5px solid var(--brd);background:var(--bg1);cursor:pointer;font-size:11px;color:var(--txt2);text-align:center;font-family:var(--font)}
+.subtab-b.on{background:var(--red);color:#fff;border-color:var(--red)}
+.subc{display:none}.subc.on{display:block}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+.pc{background:var(--bg1);border:0.5px solid var(--brd);border-radius:var(--rad2);overflow:hidden;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s}
+.pc:hover{border-color:var(--red);transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.pimg{width:100%;aspect-ratio:1;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:36px;transition:transform .3s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.pc:hover .pimg{transform:scale(1.18) rotate(-4deg)}
+.pc:active .pimg{transform:scale(0.92) rotate(0deg)}
+.pimg.pop{animation:popIcon .38s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIcon{0%{transform:scale(1)}35%{transform:scale(1.4) rotate(8deg)}100%{transform:scale(1)}}
+.pinfo{padding:9px}
+.pname{font-size:12px;font-weight:500;margin-bottom:2px;line-height:1.3}
+.pcat{font-size:11px;color:var(--txt2);margin-bottom:6px;display:flex;gap:4px;flex-wrap:wrap}
+.gtag{font-size:9px;padding:1px 6px;border-radius:20px;background:var(--bg3);color:var(--txt2)}
+.pft{display:flex;align-items:center;justify-content:space-between}
+.pprice{font-size:13px;font-weight:600}
+.abtn{width:26px;height:26px;border-radius:50%;border:0.5px solid var(--brd2);background:var(--bg1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--txt1);transition:transform .15s,background .15s,color .15s}
+.abtn:hover{background:var(--red);color:#fff;border-color:var(--red);transform:scale(1.15)}
+.abtn:active{transform:scale(.9)}
+.cbadge{background:var(--red);color:#fff;border-radius:50%;width:17px;height:17px;font-size:10px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+.citem{display:flex;align-items:center;gap:9px;padding:9px;background:var(--bg2);border-radius:var(--rad);margin-bottom:6px}
+.cicon{width:36px;height:36px;background:var(--bg1);border-radius:var(--rad);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.cinfo{flex:1;min-width:0}
+.cname{font-size:12px;font-weight:500}
+.cprice{font-size:11px;color:var(--txt2)}
+.qc{display:flex;align-items:center;gap:4px}
+.qb{width:22px;height:22px;border-radius:50%;border:0.5px solid var(--brd2);background:var(--bg1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--txt1)}
+.step-bar{display:flex;align-items:center;padding:13px 16px;border-bottom:0.5px solid var(--brd);background:var(--bg1)}
+.step{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--txt2)}
+.step.on{color:var(--red-dk);font-weight:500}
+.step.dn{color:var(--ok-txt)}
+.sn{width:19px;height:19px;border-radius:50%;border:0.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.step.on .sn{background:var(--red);color:#fff;border-color:var(--red)}
+.step.dn .sn{background:var(--ok-bg);color:var(--ok-txt);border-color:transparent}
+.ss{flex:1;height:0.5px;background:var(--brd);margin:0 6px}
+.confirm{text-align:center;padding:32px 18px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.ck{width:54px;height:54px;border-radius:50%;background:var(--ok-bg);display:flex;align-items:center;justify-content:center;font-size:26px}
+.filt-btn{padding:4px 11px;border-radius:20px;border:0.5px solid var(--brd);background:var(--bg1);cursor:pointer;font-size:11px;color:var(--txt2);font-family:var(--font)}
+.filt-btn.on{background:var(--red);color:#fff;border-color:var(--red)}
+.filt-row{display:flex;gap:6px;padding:8px 16px;flex-wrap:wrap;background:var(--bg1)}
+.filt-row-lbl{font-size:10px;color:var(--txt3);align-self:center;margin-right:2px;text-transform:uppercase;letter-spacing:.5px}
+@media(max-width:500px){.fg{grid-template-columns:1fr}.pgrid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}
+</style>
+</head>
+<body>
+
+<div id="appRoot"></div>
+<div class="toast" id="toast">
+  <i class="ti ti-check" id="ticon"></i>
+  <span id="tmsg"></span>
+</div>
+
+<script>
+const GENEROS=['Hombre','Mujer','Niños','Unisex'];
+
+const DB={
+  sesion:null,
+  admins:[
+    {id:1,user:'gerente01',pass:'pass123',rol:'Gerente General',nombre:'Carlos Evaristo'},
+    {id:2,user:'jventas01',pass:'pass123',rol:'Jefe de Ventas',nombre:'Alvaro León'},
+    {id:3,user:'jlogist01',pass:'pass123',rol:'Jefe de Logística',nombre:'Stevhen Perez'},
+  ],
+  clientes:[
+    {id:1,nombre:'Joseph Abril',correo:'joseph@email.com',pass:'pass123',tel:'987654321',dir:'Av. Los Lirios 301, Lima'},
+    {id:2,nombre:'Lionel Suyo',correo:'lionel@email.com',pass:'pass123',tel:'912345678',dir:'Jr. Lima 250, Miraflores'},
+  ],
+  cats:[{id:1,n:'Calzado'},{id:2,n:'Ropa'},{id:3,n:'Accesorios'}],
+  prods:[
+    {id:1,n:'Classic Leather',cat:1,genero:'Hombre',precio:299.90,stock:20,em:'👟',desc:'Zapatilla retro icónica de cuero genuino',tallas:['38','39','40','41','42','43']},
+    {id:2,n:'Club C 85',cat:1,genero:'Mujer',precio:249.90,stock:15,em:'👟',desc:'Estilo court clásico, favorito del streetwear',tallas:['37','38','39','40','41','42','43']},
+    {id:3,n:'Nano X3',cat:1,genero:'Hombre',precio:399.90,stock:10,em:'🏋️',desc:'Zapatilla definitiva para CrossFit',tallas:['38','39','40','41','42','43','44']},
+    {id:4,n:'Floatride Energy 5',cat:1,genero:'Mujer',precio:499.90,stock:8,em:'🏃',desc:'Máximo rendimiento en running',tallas:['38','39','40','41','42','43']},
+    {id:5,n:'Camiseta Training',cat:2,genero:'Hombre',precio:79.90,stock:30,em:'👕',desc:'Tejido transpirable para entrenamiento',tallas:['S','M','L','XL','XXL']},
+    {id:6,n:'Shorts Speed',cat:2,genero:'Hombre',precio:89.90,stock:25,em:'🩳',desc:'Short ligero para running y gym',tallas:['S','M','L','XL']},
+    {id:7,n:'Leggings Lux',cat:2,genero:'Mujer',precio:119.90,stock:18,em:'🩱',desc:'Compresión y suavidad para yoga',tallas:['XS','S','M','L','XL']},
+    {id:8,n:'Mochila Active',cat:3,genero:'Unisex',precio:129.90,stock:3,em:'🎒',desc:'25L resistente al agua',tallas:['Única']},
+    {id:9,n:'Gorra Sport',cat:3,genero:'Unisex',precio:49.90,stock:20,em:'🧢',desc:'Con visera curva y logo bordado',tallas:['Única']},
+    {id:10,n:'Medias Performance',cat:3,genero:'Unisex',precio:29.90,stock:40,em:'🧦',desc:'Pack 3 pares antibacterial',tallas:['S','M','L']},
+    {id:11,n:'Classic Leather Kids',cat:1,genero:'Niños',precio:189.90,stock:14,em:'👟',desc:'Versión infantil del ícono retro',tallas:['28','29','30','31','32','33']},
+    {id:12,n:'Runner Kids',cat:1,genero:'Niños',precio:159.90,stock:16,em:'👟',desc:'Zapatilla liviana para el recreo y el deporte escolar',tallas:['27','28','29','30','31','32']},
+    {id:13,n:'Princess Sport',cat:1,genero:'Niños',precio:169.90,stock:9,em:'👟',desc:'Diseño divertido con detalles brillantes',tallas:['27','28','29','30','31']},
+    {id:14,n:'Camiseta Kids Team',cat:2,genero:'Niños',precio:59.90,stock:22,em:'👕',desc:'Algodón suave con estampado del equipo',tallas:['4','6','8','10','12']},
+    {id:15,n:'Short Kids Play',cat:2,genero:'Niños',precio:49.90,stock:26,em:'🩳',desc:'Resistente para el recreo y el fútbol',tallas:['4','6','8','10','12']},
+    {id:16,n:'Buzo Training Mujer',cat:2,genero:'Mujer',precio:159.90,stock:12,em:'🧥',desc:'Buzo abrigador para pre y post entrenamiento',tallas:['XS','S','M','L','XL']},
+    {id:17,n:'Mochila Mini Explorer',cat:3,genero:'Niños',precio:79.90,stock:11,em:'🎒',desc:'Mochila infantil 12L con diseño divertido',tallas:['Única']},
+    {id:18,n:'Mochila Urban Pro',cat:3,genero:'Hombre',precio:169.90,stock:7,em:'🎒',desc:'35L con compartimento acolchado para laptop',tallas:['Única']},
+    {id:19,n:'Mochila Chic',cat:3,genero:'Mujer',precio:149.90,stock:6,em:'🎒',desc:'Diseño urbano compacto con bolsillo térmico',tallas:['Única']},
+    {id:20,n:'Mochila Deportiva Compacta',cat:3,genero:'Unisex',precio:99.90,stock:0,em:'🎒',desc:'18L ideal para el día a día en el gym',tallas:['Única']},
+  ],
+  pedidos:[],comprobantes:[],pagos:[],guias:[],reposiciones:[],
+  pId:1,cId:3,compId:1,pagoId:1,guiaId:1,admId:4,repoId:1,
+  carrito:[],prodDetalle:null,chkMetodo:'TARJETA',filtCat:'Todos',filtGen:'Todos',
+  admPage:'dashboard',tiendaPg:'catalogo',loginTab:'admin',
+  _admItems:[],_lastNumPed:'',_lastTotal:0,_lastItems:[],
+  _detTalla:'Única',_detCant:1,
+};
+
+function catN(id){return(DB.cats.find(c=>c.id===id)||{n:'—'}).n;}
+function prodById(id){return DB.prods.find(p=>p.id===id);}
+
+function toast(m,ok=true){
+  const t=document.getElementById('toast');
+  const ic=document.getElementById('ticon');
+  ic.className='ti '+(ok?'ti-check':'ti-alert-circle');
+  ic.style.color=ok?'#1a7f37':'#c62828';
+  document.getElementById('tmsg').textContent=m;
+  t.classList.add('on');
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('on'),2600);
+}
+
+function pillE(e){
+  const m={PENDIENTE:'p-w',EN_PROCESO:'p-i',ENVIADO:'p-i',ENTREGADO:'p-ok',CANCELADO:'p-d'};
+  return`<span class="pill ${m[e]||'p-g'}">${e}</span>`;
+}
+function fmt(n){return'S/.'+parseFloat(n).toFixed(2);}
+
+function popIcon(el){
+  if(!el)return;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+function render(){
+  const root=document.getElementById('appRoot');
+  if(!DB.sesion){root.innerHTML=renderLogin();return;}
+  if(DB.sesion.tipo==='cliente'){root.innerHTML=renderTienda();tiendaGo(DB.tiendaPg||'catalogo');}
+  else{root.innerHTML=renderAdmin();admRender();}
+}
+
+function renderLogin(){
+  return`
+  <div class="hdr"><span class="logo"><i class="ti ti-flame"></i>REEBOK</span><span style="font-size:12px;color:var(--txt2)">Sistema de ventas y logística</span></div>
+  <div class="login-wrap">
+    <div class="lcard">
+      <div class="logo" style="font-size:20px;margin-bottom:4px"><i class="ti ti-flame"></i>REEBOK</div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:18px">Ingresa a tu cuenta para continuar</div>
+      <div class="subtabs">
+        <div class="subtab-b on" id="subLoginBtn" onclick="swSub('subLogin','subLoginBtn','subRegBtn')">Iniciar sesión</div>
+        <div class="subtab-b" id="subRegBtn" onclick="swSub('subReg','subRegBtn','subLoginBtn')">Crear cuenta</div>
+      </div>
+      <div class="subc on" id="subLogin">
+        <div class="frow"><label>Correo o usuario</label><input type="text" id="lgU" placeholder="correo@email.com"></div>
+        <div class="frow"><label>Contraseña</label><input type="password" id="lgP" placeholder="Tu contraseña"></div>
+        <button class="btn btn-p" style="width:100%;justify-content:center;margin-top:4px" onclick="loginUnificado()">
+          <i class="ti ti-login"></i> Ingresar
+        </button>
+        <p style="font-size:10px;color:var(--txt2);margin-top:10px;text-align:center">Demo cliente: joseph@email.com / pass123</p>
+      </div>
+      <div class="subc" id="subReg">
+        <div class="frow"><label>Nombre completo</label><input type="text" id="rgN" placeholder="Tu nombre"></div>
+        <div class="frow"><label>Correo</label><input type="email" id="rgE" placeholder="correo@email.com"></div>
+        <div class="frow"><label>Contraseña</label><input type="password" id="rgP" placeholder="Mínimo 6 caracteres"></div>
+        <div class="frow"><label>Dirección</label><input type="text" id="rgD" placeholder="Av. Lima 123, Lima"></div>
+        <button class="btn" style="width:100%;justify-content:center;margin-top:4px" onclick="registerCli()">
+          <i class="ti ti-user-plus"></i> Crear cuenta
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function swSub(show,onBtn,offBtn){
+  const parent=document.getElementById(show).parentElement;
+  parent.querySelectorAll('.subc').forEach(el=>el.classList.remove('on'));
+  parent.querySelectorAll('.subtab-b').forEach(el=>el.classList.remove('on'));
+  document.getElementById(show).classList.add('on');
+  document.getElementById(onBtn).classList.add('on');
+}
+
+function loginUnificado(){
+  const u=document.getElementById('lgU').value.trim();
+  const p=document.getElementById('lgP').value;
+  const cli=DB.clientes.find(x=>x.correo===u&&x.pass===p);
+  if(cli){
+    DB.sesion={...cli,tipo:'cliente'};DB.tiendaPg='catalogo';DB.carrito=[];
+    render();toast('Bienvenido, '+cli.nombre.split(' ')[0]);return;
+  }
+  const adm=DB.admins.find(x=>x.user===u&&x.pass===p);
+  if(adm){
+    DB.sesion={...adm,tipo:'admin'};DB.admPage='dashboard';
+    render();toast('Bienvenido, '+adm.nombre);return;
+  }
+  toast('Correo/usuario o contraseña incorrectos',false);
+}
+
+function registerCli(){
+  const n=document.getElementById('rgN').value.trim();
+  const e=document.getElementById('rgE').value.trim();
+  const p=document.getElementById('rgP').value;
+  const d=document.getElementById('rgD').value.trim();
+  if(!n||!e||!p){toast('Completa nombre, correo y contraseña',false);return;}
+  if(DB.clientes.find(c=>c.correo===e)){toast('Correo ya registrado',false);return;}
+  if(p.length<6){toast('Contraseña demasiado corta',false);return;}
+  const nc={id:DB.cId++,nombre:n,correo:e,pass:p,tel:'—',dir:d||'Lima'};
+  DB.clientes.push(nc);
+  DB.sesion={...nc,tipo:'cliente'};DB.tiendaPg='catalogo';DB.carrito=[];
+  render();toast('Cuenta creada. ¡Bienvenido!');
+}
+
+function logout(){DB.sesion=null;DB.carrito=[];render();}
+
+const ADMPERMS={
+  'Gerente General':['dashboard','catalogo','logistica','reportes'],
+  'Jefe de Ventas':['dashboard','productos','clientes','pedidos','cobros','reportes','catalogo'],
+  'Jefe de Logística':['dashboard','logistica','reportes','catalogo'],
+};
+const ADMLBLS={dashboard:'Dashboard',productos:'Productos',clientes:'Clientes',pedidos:'Pedidos',cobros:'Cobros',logistica:'Logística',reportes:'Reportes',catalogo:'Catálogo'};
+const ADMICONS={dashboard:'ti-home',productos:'ti-package',clientes:'ti-users',pedidos:'ti-shopping-cart',cobros:'ti-receipt',logistica:'ti-truck',reportes:'ti-chart-bar',catalogo:'ti-tag'};
+
+function renderAdmin(){
+  const perms=ADMPERMS[DB.sesion.rol]||[];
+  const nav=perms.map(k=>`<button class="nb" id="nb_${k}" onclick="admGo('${k}')"><i class="ti ${ADMICONS[k]}"></i>${ADMLBLS[k]}</button>`).join('');
+  return`
+  <div class="hdr">
+    <div class="fr"><span class="logo"><i class="ti ti-flame"></i>REEBOK</span><span class="badge">${DB.sesion.rol}</span></div>
+    <div class="fr">
+      <span style="font-size:11px;color:var(--txt2)">${DB.sesion.nombre}</span>
+      <button class="btn btn-xs" onclick="logout()"><i class="ti ti-logout"></i> Salir</button>
+    </div>
+  </div>
+  <div class="nav" id="adminNav">${nav}</div>
+  <div id="admContent"></div>`;
+}
+
+function admGo(pg){
+  DB.admPage=pg;
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  const nb=document.getElementById('nb_'+pg);if(nb)nb.classList.add('on');
+  admRender();
+}
+
+function admRender(){
+  const nb=document.getElementById('nb_'+DB.admPage);if(nb)nb.classList.add('on');
+  const c=document.getElementById('admContent');if(!c)return;
+  const pg=DB.admPage;
+  if(pg==='dashboard')c.innerHTML=admDashboard();
+  else if(pg==='productos')c.innerHTML=admProductos();
+  else if(pg==='clientes')c.innerHTML=admClientes();
+  else if(pg==='pedidos')c.innerHTML=admPedidos();
+  else if(pg==='cobros')c.innerHTML=admCobros();
+  else if(pg==='logistica')c.innerHTML=admLogistica();
+  else if(pg==='reportes')c.innerHTML=admReportes();
+  else if(pg==='catalogo')c.innerHTML=admCatalogo();
+}
+
+function admDashboard(){
+  const ing=DB.pedidos.filter(p=>p.pagado).reduce((s,p)=>s+p.total,0);
+  const pend=DB.pedidos.filter(p=>!p.pagado).length;
+  const sb=DB.prods.filter(p=>p.stock<5).length;
+  const ults=DB.pedidos.slice(-6).reverse().map(p=>`<tr>
+    <td>#${p.id}</td><td>${p.cliente}</td><td>${fmt(p.total)}</td>
+    <td>${pillE(p.estado)}</td>
+    <td>${p.pagado?'<span class="pill p-ok">Sí</span>':'<span class="pill p-w">No</span>'}</td>
+    </tr>`).join('');
+  const bajos=DB.prods.filter(p=>p.stock<5).map(p=>`
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--brd);font-size:12px">
+      <span>${p.em} ${p.n}</span><span class="${p.stock===0?'pill p-d':'pill p-w'}">Stock: ${p.stock}</span>
+    </div>`).join('');
+  return`<div class="pg">
+    <div class="metrics">
+      <div class="met"><div class="mv">${DB.pedidos.length}</div><div class="ml">Pedidos totales</div></div>
+      <div class="met"><div class="mv">${fmt(ing)}</div><div class="ml">Ingresos</div></div>
+      <div class="met"><div class="mv">${DB.clientes.length}</div><div class="ml">Clientes</div></div>
+      <div class="met"><div class="mv">${DB.admins.length}</div><div class="ml">Administradores</div></div>
+      <div class="met"><div class="mv">${pend}</div><div class="ml">Pendientes pago</div></div>
+      <div class="met"><div class="mv">${sb}</div><div class="ml">Stock bajo</div></div>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-list"></i> Pedidos recientes</div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Pagado</th></tr></thead>
+      <tbody>${ults||'<tr><td colspan="5" class="empty">Sin pedidos aún</td></tr>'}</tbody></table></div>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-alert-triangle"></i> Productos con stock bajo</div>
+      ${bajos||'<p style="font-size:12px;color:var(--txt2)">Todo el inventario está en niveles normales.</p>'}
+    </div>
+  </div>`;
+}
+
+function admProductos(){
+  const catOpts=DB.cats.map(c=>`<option value="${c.id}">${c.n}</option>`).join('');
+  const genOpts=GENEROS.map(g=>`<option value="${g}">${g}</option>`).join('');
+  const rows=DB.prods.map(p=>`<tr>
+    <td>${p.id}</td><td>${p.em} ${p.n}</td><td>${catN(p.cat)}</td><td><span class="pill p-g">${p.genero||'Unisex'}</span></td>
+    <td>${fmt(p.precio)}</td><td>${p.stock===0?'<span class="pill p-d">0</span>':p.stock<5?'<span class="pill p-w">'+p.stock+'</span>':p.stock}</td>
+    <td><button class="btn btn-xs btn-d" onclick="delProd(${p.id})"><i class="ti ti-trash"></i></button></td>
+    </tr>`).join('');
+  return`<div class="pg">
+    <div class="card"><div class="ct"><i class="ti ti-plus"></i> Agregar nuevo producto</div>
+      <div class="fg">
+        <div class="frow"><label>Nombre</label><input id="pN" placeholder="Nombre del producto"></div>
+        <div class="frow"><label>Precio S/.</label><input type="number" id="pPr" placeholder="0.00" step="0.01"></div>
+        <div class="frow"><label>Stock inicial</label><input type="number" id="pSt" placeholder="0"></div>
+        <div class="frow"><label>Categoría</label><select id="pCa">${catOpts}</select></div>
+        <div class="frow"><label>Género / Público</label><select id="pGe">${genOpts}</select></div>
+      </div>
+      <div class="frow"><label>Descripción</label><input id="pDe" placeholder="Descripción breve del producto"></div>
+      <div style="margin-top:6px"><button class="btn btn-p" onclick="addProd()"><i class="ti ti-plus"></i> Agregar producto</button></div>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-package"></i> Inventario completo (${DB.prods.length} productos)</div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Producto</th><th>Categoría</th><th>Género</th><th>Precio</th><th>Stock</th><th>Acción</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    </div>
+  </div>`;
+}
+
+function addProd(){
+  const n=document.getElementById('pN').value.trim();
+  const pr=parseFloat(document.getElementById('pPr').value);
+  const st=parseInt(document.getElementById('pSt').value);
+  const ca=parseInt(document.getElementById('pCa').value);
+  const ge=document.getElementById('pGe').value;
+  const de=document.getElementById('pDe').value.trim();
+  if(!n||isNaN(pr)||isNaN(st)){toast('Completa todos los campos',false);return;}
+  const ems={1:'👟',2:'👕',3:'🎒'};
+  DB.prods.push({id:DB.prods.length+1,n,cat:ca,genero:ge,precio:pr,stock:st,em:ems[ca]||'📦',desc:de||'—',tallas:['Única']});
+  admGo('productos');toast('Producto "'+n+'" agregado');
+}
+
+function delProd(id){
+  DB.prods=DB.prods.filter(x=>x.id!==id);
+  admGo('productos');toast('Producto eliminado');
+}
+
+function admClientes(){
+  const rows=DB.clientes.map(c=>`<tr>
+    <td>${c.id}</td><td>${c.nombre}</td><td>${c.correo}</td><td>${c.tel}</td><td>${c.dir}</td>
+    </tr>`).join('');
+  return`<div class="pg">
+    <div class="card"><div class="ct"><i class="ti ti-user-plus"></i> Registrar nuevo cliente</div>
+      <div class="fg">
+        <div class="frow"><label>Nombre completo</label><input id="cN" placeholder="Nombre y apellido"></div>
+        <div class="frow"><label>Correo electrónico</label><input type="email" id="cE" placeholder="correo@email.com"></div>
+        <div class="frow"><label>Teléfono</label><input id="cT" placeholder="9XXXXXXXX"></div>
+        <div class="frow"><label>Dirección</label><input id="cD" placeholder="Av. Principal 123, Lima"></div>
+      </div>
+      <button class="btn btn-p" onclick="addCli()"><i class="ti ti-user-plus"></i> Registrar cliente</button>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-users"></i> Clientes registrados (${DB.clientes.length})</div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Dirección</th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="5" class="empty">Sin clientes</td></tr>'}</tbody></table></div>
+    </div>
+  </div>`;
+}
+
+function addCli(){
+  const n=document.getElementById('cN').value.trim();
+  const e=document.getElementById('cE').value.trim();
+  const t=document.getElementById('cT').value.trim();
+  const d=document.getElementById('cD').value.trim();
+  if(!n){toast('El nombre es requerido',false);return;}
+  if(e&&DB.clientes.find(c=>c.correo===e)){toast('Correo ya registrado',false);return;}
+  DB.clientes.push({id:DB.cId++,nombre:n,correo:e||'—',pass:'123456',tel:t||'—',dir:d||'Lima'});
+  admGo('clientes');toast('Cliente "'+n+'" registrado');
+}
+
+function admPedidos(){
+  const cliOpts=DB.clientes.map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');
+  const prodOpts=DB.prods.map(p=>`<option value="${p.id}">${p.em} ${p.n} — ${fmt(p.precio)} (stock: ${p.stock})</option>`).join('');
+  const items=DB._admItems||[];
+  const total=items.reduce((s,i)=>s+i.precio*i.cant,0);
+  const iHtml=items.length?items.map((it,idx)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--brd);font-size:12px">
+      <span>${it.em} ${it.n} x${it.cant}</span>
+      <span style="display:flex;align-items:center;gap:6px">${fmt(it.precio*it.cant)}
+        <button class="btn btn-xs btn-d" onclick="rmAdmItem(${idx})"><i class="ti ti-x"></i></button>
+      </span>
+    </div>`).join(''):'<div style="font-size:12px;color:var(--txt2);padding:4px 0">Sin productos añadidos.</div>';
+  const rows=DB.pedidos.slice().reverse().map(p=>`<tr>
+    <td>#${p.id}</td><td>${p.numPed||'—'}</td><td>${p.cliente}</td><td>${p.fecha}</td>
+    <td>${fmt(p.total)}</td><td>${pillE(p.estado)}</td>
+    <td>${p.pagado?'<span class="pill p-ok">Sí</span>':'<span class="pill p-w">No</span>'}</td>
+    <td>${!p.pagado?`<button class="btn btn-xs" onclick="irCobrarAdm(${p.id})"><i class="ti ti-cash"></i></button>`:''}</td>
+    </tr>`).join('');
+  return`<div class="pg">
+    <div class="card"><div class="ct"><i class="ti ti-shopping-cart"></i> Registrar nuevo pedido</div>
+      <div class="fg">
+        <div class="frow"><label>Cliente</label><select id="pedCli">${cliOpts}</select></div>
+      </div>
+      <div class="fr" style="margin-bottom:8px">
+        <select id="pedPr" style="flex:2">${prodOpts}</select>
+        <input type="number" id="pedCt" value="1" min="1" style="width:65px">
+        <button class="btn btn-xs" onclick="addAdmItem()"><i class="ti ti-plus"></i> Añadir</button>
+      </div>
+      ${iHtml}
+      <div class="fr" style="margin-top:10px;justify-content:space-between">
+        <span style="font-weight:600;font-size:14px">Total: ${fmt(total)}</span>
+        <div class="fr">
+          <button class="btn btn-xs" onclick="DB._admItems=[];admGo('pedidos')"><i class="ti ti-x"></i> Limpiar</button>
+          <button class="btn btn-p btn-xs" onclick="crearPedidoAdm()"><i class="ti ti-check"></i> Registrar pedido</button>
+        </div>
+      </div>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-list"></i> Todos los pedidos (${DB.pedidos.length})</div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Nro.</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Pagado</th><th></th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="8" class="empty">Sin pedidos registrados</td></tr>'}</tbody></table></div>
+    </div>
+  </div>`;
+}
+
+function addAdmItem(){
+  const pid=parseInt(document.getElementById('pedPr').value);
+  const cant=parseInt(document.getElementById('pedCt').value)||1;
+  const prod=prodById(pid);if(!prod)return;
+  if(!DB._admItems)DB._admItems=[];
+  const ex=DB._admItems.find(i=>i.pid===pid);
+  const tot=(ex?ex.cant:0)+cant;
+  if(tot>prod.stock){toast('Stock insuficiente (disponible: '+prod.stock+')',false);return;}
+  if(ex)ex.cant+=cant;
+  else DB._admItems.push({pid,n:prod.n,em:prod.em,precio:prod.precio,cant});
+  admGo('pedidos');
+}
+
+function rmAdmItem(idx){
+  if(DB._admItems)DB._admItems.splice(idx,1);
+  admGo('pedidos');
+}
+
+function crearPedidoAdm(){
+  const items=DB._admItems||[];
+  if(!items.length){toast('Agrega al menos un producto',false);return;}
+  const cliId=parseInt(document.getElementById('pedCli').value);
+  const cli=DB.clientes.find(c=>c.id===cliId);
+  const total=items.reduce((s,i)=>s+i.precio*i.cant,0);
+  items.forEach(i=>{const p=prodById(i.pid);if(p)p.stock-=i.cant;});
+  const numPed='RBK-'+String(DB.pId).padStart(4,'0');
+  DB.pedidos.push({
+    id:DB.pId++,numPed,cliente:cli.nombre,clienteId:cliId,
+    clienteDir:cli.dir,items:[...items],total,
+    fecha:new Date().toLocaleDateString('es-PE'),estado:'PENDIENTE',pagado:false
+  });
+  DB._admItems=[];
+  admGo('pedidos');toast('Pedido '+numPed+' registrado');
+}
+
+function irCobrarAdm(id){
+  DB.admPage='cobros';DB._cobrarId=id;
+  admRender();
+  setTimeout(()=>{const el=document.getElementById('cobroPed');if(el)el.value=id;},60);
+}
+
+function admCobros(){
+  const pendOpts=DB.pedidos.filter(p=>!p.pagado)
+    .map(p=>`<option value="${p.id}">#${p.id} — ${p.cliente} (${fmt(p.total)})</option>`).join('');
+  const rows=DB.comprobantes.slice().reverse().map(c=>`<tr>
+    <td>#${c.id}</td><td><span class="pill p-i">${c.tipo}</span></td>
+    <td>#${c.pedId}</td><td>${c.cliente}</td><td>${fmt(c.total)}</td><td>${c.fecha}</td>
+    </tr>`).join('');
+  return`<div class="pg">
+    <div class="card"><div class="ct"><i class="ti ti-cash"></i> Registrar cobro</div>
+      <div class="fg">
+        <div class="frow"><label>Pedido pendiente de pago</label>
+          <select id="cobroPed"><option value="">— Seleccionar pedido —</option>${pendOpts}</select>
+        </div>
+        <div class="frow"><label>Método de pago</label>
+          <select id="cobroMet">
+            <option value="EFECTIVO">Efectivo</option>
+            <option value="TARJETA">Tarjeta de crédito/débito</option>
+            <option value="DEPOSITO_BANCARIO">Depósito bancario</option>
+          </select>
+        </div>
+        <div class="frow"><label>Tipo de comprobante</label>
+          <select id="cobroTip">
+            <option value="BOLETA">Boleta de venta</option>
+            <option value="FACTURA">Factura</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-p" onclick="cobrarAdm()"><i class="ti ti-receipt"></i> Registrar cobro y emitir comprobante</button>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-file-invoice"></i> Comprobantes emitidos (${DB.comprobantes.length})</div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Tipo</th><th>Pedido</th><th>Cliente</th><th>Total</th><th>Fecha</th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="6" class="empty">Sin comprobantes emitidos</td></tr>'}</tbody></table></div>
+    </div>
+  </div>`;
+}
+
+function cobrarAdm(){
+  const pid=parseInt(document.getElementById('cobroPed').value);
+  if(!pid){toast('Selecciona un pedido',false);return;}
+  const p=DB.pedidos.find(x=>x.id===pid);
+  if(!p||p.pagado){toast('Pedido ya cobrado o inválido',false);return;}
+  const met=document.getElementById('cobroMet').value;
+  const tip=document.getElementById('cobroTip').value;
+  p.pagado=true;p.estado='EN_PROCESO';
+  DB.pagos.push({id:DB.pagoId++,pedId:pid,monto:p.total,metodo:met,fecha:new Date().toLocaleDateString('es-PE')});
+  DB.comprobantes.push({id:DB.compId++,tipo:tip,pedId:pid,cliente:p.cliente,total:p.total,fecha:new Date().toLocaleDateString('es-PE')});
+  admGo('cobros');toast(tip+' emitida para pedido #'+pid);
+}
+
+function admLogistica(){
+  const enProc=DB.pedidos.filter(p=>p.pagado&&p.estado==='EN_PROCESO')
+    .map(p=>`<option value="${p.id}">#${p.id} — ${p.cliente}</option>`).join('');
+  const enviados=DB.pedidos.filter(p=>p.estado==='ENVIADO')
+    .map(p=>`<option value="${p.id}">#${p.id} — ${p.cliente}</option>`).join('');
+  const rows=DB.guias.slice().reverse().map(g=>`<tr>
+    <td>#${g.id}</td><td>#${g.pedId}</td><td>${g.cliente}</td>
+    <td>${g.dir}</td><td>${g.fecha}</td><td>${pillE(g.estado)}</td>
+    </tr>`).join('');
+  const prodOptsRepo=DB.prods.slice().sort((a,b)=>a.stock-b.stock)
+    .map(p=>`<option value="${p.id}">${p.stock===0?'⚠️ ':p.stock<5?'⚠ ':''}${p.em} ${p.n} (stock actual: ${p.stock})</option>`).join('');
+  const bajoStock=DB.prods.filter(p=>p.stock<5).map(p=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--brd);font-size:12px">
+      <span>${p.em} ${p.n}</span>
+      <span class="${p.stock===0?'pill p-d':'pill p-w'}">Stock: ${p.stock}</span>
+    </div>`).join('');
+  const repoRows=DB.reposiciones.slice().reverse().map(r=>`<tr>
+    <td>#${r.id}</td><td>${r.em} ${r.n}</td><td>+${r.cant}</td><td>${r.stockFinal}</td><td>${r.fecha}</td><td>${r.responsable}</td>
+    </tr>`).join('');
+  return`<div class="pg">
+    <div class="card"><div class="ct"><i class="ti ti-box-seam"></i> Reponer stock de producto</div>
+      ${bajoStock?`<div style="margin-bottom:10px">${bajoStock}</div>`:'<p style="font-size:12px;color:var(--txt2);margin-bottom:8px">No hay productos con stock bajo por ahora.</p>'}
+      <div class="fg">
+        <div class="frow"><label>Producto</label><select id="repoProd">${prodOptsRepo}</select></div>
+        <div class="frow"><label>Cantidad a reponer</label><input type="number" id="repoCant" value="10" min="1"></div>
+      </div>
+      <button class="btn btn-p" onclick="reponerStock()"><i class="ti ti-box-seam"></i> Registrar reposición de stock</button>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-file-export"></i> Generar guía de remisión</div>
+      <div class="frow"><label>Pedido pagado (en proceso de despacho)</label>
+        <select id="guiaPed"><option value="">— Seleccionar pedido —</option>${enProc}</select>
+      </div>
+      <button class="btn btn-p" onclick="generarGuiaAdm()"><i class="ti ti-truck"></i> Generar guía de remisión</button>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-package-export"></i> Liquidar entrega</div>
+      <div class="frow"><label>Pedido en estado ENVIADO</label>
+        <select id="liqPed"><option value="">— Seleccionar pedido —</option>${enviados}</select>
+      </div>
+      <button class="btn btn-p" onclick="liquidarAdm()"><i class="ti ti-check"></i> Confirmar entrega al cliente</button>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-history"></i> Historial de reposiciones (${DB.reposiciones.length})</div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Producto</th><th>Cantidad</th><th>Stock final</th><th>Fecha</th><th>Responsable</th></tr></thead>
+      <tbody>${repoRows||'<tr><td colspan="6" class="empty">Sin reposiciones registradas</td></tr>'}</tbody></table></div>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-files"></i> Guías de remisión (${DB.guias.length})</div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Pedido</th><th>Cliente</th><th>Dirección</th><th>Fecha</th><th>Estado</th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="6" class="empty">Sin guías generadas</td></tr>'}</tbody></table></div>
+    </div>
+  </div>`;
+}
+
+function reponerStock(){
+  const pid=parseInt(document.getElementById('repoProd').value);
+  const cant=parseInt(document.getElementById('repoCant').value);
+  if(!pid||!cant||cant<1){toast('Selecciona un producto e ingresa una cantidad válida',false);return;}
+  const p=prodById(pid);if(!p)return;
+  p.stock+=cant;
+  DB.reposiciones.push({id:DB.repoId++,pid,n:p.n,em:p.em,cant,stockFinal:p.stock,fecha:new Date().toLocaleDateString('es-PE'),responsable:DB.sesion.nombre});
+  admGo('logistica');toast('Se repusieron '+cant+' unidades de "'+p.n+'"');
+}
+
+function generarGuiaAdm(){
+  const pid=parseInt(document.getElementById('guiaPed').value);
+  if(!pid){toast('Selecciona un pedido',false);return;}
+  const p=DB.pedidos.find(x=>x.id===pid);if(!p)return;
+  p.estado='ENVIADO';
+  DB.guias.push({id:DB.guiaId++,pedId:pid,cliente:p.cliente,dir:p.clienteDir||'Lima',fecha:new Date().toLocaleDateString('es-PE'),estado:'ENVIADO'});
+  admGo('logistica');toast('Guía de remisión #'+DB.guias[DB.guias.length-1].id+' generada');
+}
+
+function liquidarAdm(){
+  const pid=parseInt(document.getElementById('liqPed').value);
+  if(!pid){toast('Selecciona un pedido enviado',false);return;}
+  const p=DB.pedidos.find(x=>x.id===pid);if(!p)return;
+  p.estado='ENTREGADO';
+  const g=DB.guias.find(x=>x.pedId===pid);if(g)g.estado='ENTREGADO';
+  admGo('logistica');toast('Pedido #'+pid+' marcado como ENTREGADO');
+}
+
+function admReportes(){
+  const ing=DB.pedidos.filter(p=>p.pagado).reduce((s,p)=>s+p.total,0);
+  const porCli={};
+  DB.pedidos.forEach(p=>{if(!porCli[p.cliente])porCli[p.cliente]={t:0,c:0};porCli[p.cliente].t+=p.total;porCli[p.cliente].c++;});
+  const cliRows=Object.entries(porCli).sort((a,b)=>b[1].t-a[1].t)
+    .map(([n,d])=>`<tr><td>${n}</td><td>${d.c}</td><td>${fmt(d.t)}</td></tr>`).join('');
+  const pagoRows=DB.pagos.slice().reverse()
+    .map(p=>`<tr><td>#${p.id}</td><td>#${p.pedId}</td><td>${fmt(p.monto)}</td><td>${p.metodo.replace('_',' ')}</td><td>${p.fecha}</td></tr>`).join('');
+  return`<div class="pg">
+    <div class="metrics">
+      <div class="met"><div class="mv">${DB.pedidos.filter(p=>p.pagado).length}</div><div class="ml">Pedidos pagados</div></div>
+      <div class="met"><div class="mv">${fmt(ing)}</div><div class="ml">Ingresos totales</div></div>
+      <div class="met"><div class="mv">${DB.guias.filter(g=>g.estado==='ENTREGADO').length}</div><div class="ml">Entregas completadas</div></div>
+      <div class="met"><div class="mv">${DB.comprobantes.length}</div><div class="ml">Comprobantes emitidos</div></div>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-chart-bar"></i> Ventas por cliente</div>
+      <div class="tw"><table><thead><tr><th>Cliente</th><th>Pedidos</th><th>Total comprado</th></tr></thead>
+      <tbody>${cliRows||'<tr><td colspan="3" class="empty">Sin ventas registradas</td></tr>'}</tbody></table></div>
+    </div>
+    <div class="card"><div class="ct"><i class="ti ti-cash"></i> Historial de pagos</div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Pedido</th><th>Monto</th><th>Método</th><th>Fecha</th></tr></thead>
+      <tbody>${pagoRows||'<tr><td colspan="5" class="empty">Sin pagos registrados</td></tr>'}</tbody></table></div>
+    </div>
+  </div>`;
+}
+
+function admCatalogo(){
+  const grid=DB.prods.map(p=>`
+    <div class="pc" onmouseenter="popIcon(this.querySelector('.pimg'))">
+      <div class="pimg">${p.em}</div>
+      <div class="pinfo">
+        <div class="pname">${p.n}</div>
+        <div class="pcat">${catN(p.cat)} <span class="gtag">${p.genero||'Unisex'}</span></div>
+        <div class="pft">
+          <span class="pprice">${fmt(p.precio)}</span>
+          <span class="${p.stock===0?'pill p-d':p.stock<5?'pill p-w':'pill p-ok'}">${p.stock===0?'Agotado':p.stock<5?'Stock bajo':p.stock}</span>
+        </div>
+      </div>
+    </div>`).join('');
+  return`<div class="pg">
+    <div class="card"><div class="ct"><i class="ti ti-tag"></i> Catálogo completo — ${DB.prods.length} productos</div>
+      <div class="pgrid">${grid}</div>
+    </div>
+  </div>`;
+}
+
+function renderTienda(){
+  const cart=DB.carrito||[];
+  const cartN=cart.reduce((s,i)=>s+i.cant,0);
+  const u=DB.sesion;
+  return`
+  <div class="hdr">
+    <span class="logo"><i class="ti ti-flame"></i>REEBOK</span>
+    <div class="fr">
+      <span style="font-size:12px;color:var(--txt2)">Hola, ${u.nombre.split(' ')[0]}</span>
+      <button class="btn btn-xs" onclick="tiendaGo('mispedidos')"><i class="ti ti-list"></i> Mis pedidos</button>
+      <button class="btn btn-xs" onclick="tiendaGo('carrito')" style="position:relative">
+        <i class="ti ti-shopping-cart"></i>
+        <span class="cbadge" id="cartBadge">${cartN}</span>
+      </button>
+      <button class="btn btn-xs" onclick="logout()"><i class="ti ti-logout"></i></button>
+    </div>
+  </div>
+  <div id="tiendaContent"></div>`;
+}
+
+function tiendaGo(pg){
+  DB.tiendaPg=pg;
+  const c=document.getElementById('tiendaContent');
+  if(c)c.innerHTML=tiendaRenderPg(pg);
+  const b=document.getElementById('cartBadge');
+  if(b)b.textContent=(DB.carrito||[]).reduce((s,i)=>s+i.cant,0);
+}
+
+function tiendaRenderPg(pg){
+  if(pg==='catalogo')return tiendaCatalogo();
+  if(pg==='detalle')return tiendaDetalle();
+  if(pg==='carrito')return tiendaCarrito();
+  if(pg==='checkout')return tiendaCheckout();
+  if(pg==='confirm')return tiendaConfirm();
+  if(pg==='mispedidos')return tiendaMisPedidos();
+  return tiendaCatalogo();
+}
+
+function tiendaCatalogo(){
+  const cats=['Todos','Calzado','Ropa','Accesorios'];
+  const filtBtns=cats.map(c=>`<button class="filt-btn${DB.filtCat===c?' on':''}" onclick="setFilt('${c}')">${c}</button>`).join('');
+  const gens=['Todos',...GENEROS];
+  const genBtns=gens.map(g=>`<button class="filt-btn${DB.filtGen===g?' on':''}" onclick="setFiltGen('${g}')">${g}</button>`).join('');
+  const prods=DB.prods.filter(p=>(DB.filtCat==='Todos'||catN(p.cat)===DB.filtCat)&&(DB.filtGen==='Todos'||p.genero===DB.filtGen));
+  const grid=prods.map(p=>`
+    <div class="pc" onclick="verDet(${p.id})" onmouseenter="popIcon(this.querySelector('.pimg'))">
+      <div class="pimg" id="pimg_${p.id}">${p.em}</div>
+      <div class="pinfo">
+        <div class="pname">${p.n}</div>
+        <div class="pcat">${catN(p.cat)} <span class="gtag">${p.genero||'Unisex'}</span></div>
+        <div class="pft">
+          <span class="pprice">${fmt(p.precio)}</span>
+          <button class="abtn" onclick="event.stopPropagation();addCart(${p.id})" title="Agregar al carrito">+</button>
+        </div>
+        ${p.stock<5&&p.stock>0?'<div style="margin-top:3px"><span class="pill p-w" style="font-size:10px">Últimas unidades</span></div>':''}
+        ${p.stock===0?'<div style="margin-top:3px"><span class="pill p-d" style="font-size:10px">Agotado</span></div>':''}
+      </div>
+    </div>`).join('');
+  return`
+  <div style="padding:20px 16px 12px;text-align:center;background:var(--bg1);border-bottom:0.5px solid var(--brd)">
+    <div style="font-size:17px;font-weight:600;margin-bottom:3px">Colección Reebok</div>
+    <div style="font-size:12px;color:var(--txt2)">Calzado, ropa y accesorios deportivos para toda la familia</div>
+  </div>
+  <div class="filt-row" style="border-bottom:none;padding-bottom:2px"><span class="filt-row-lbl">Categoría</span>${filtBtns}</div>
+  <div class="filt-row" style="border-bottom:0.5px solid var(--brd)"><span class="filt-row-lbl">Para</span>${genBtns}</div>
+  <div class="pgrid" style="padding:14px 16px">${grid||'<div class="empty" style="grid-column:1/-1">Sin productos en esta selección.</div>'}</div>`;
+}
+
+function setFilt(cat){DB.filtCat=cat;tiendaGo('catalogo');}
+function setFiltGen(gen){DB.filtGen=gen;tiendaGo('catalogo');}
+
+function verDet(id){
+  DB.prodDetalle=prodById(id);
+  DB._detTalla=(DB.prodDetalle.tallas||['Única'])[0];
+  DB._detCant=1;
+  tiendaGo('detalle');
+}
+
+function tiendaDetalle(){
+  const p=DB.prodDetalle;if(!p)return tiendaCatalogo();
+  const tallas=(p.tallas||['Única']).map((t,i)=>`<button class="filt-btn${i===0?' on':''}" onclick="selTalla(this,'${t}')">${t}</button>`).join('');
+  return`
+  <div style="padding:10px 16px;background:var(--bg1);border-bottom:0.5px solid var(--brd)">
+    <button class="btn btn-xs" onclick="tiendaGo('catalogo')"><i class="ti ti-arrow-left"></i> Volver al catálogo</button>
+  </div>
+  <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+    <div style="background:var(--bg2);border-radius:var(--rad2);aspect-ratio:2/1;display:flex;align-items:center;justify-content:center;font-size:64px;transition:transform .3s" onmouseenter="this.style.transform='scale(1.06) rotate(-2deg)'" onmouseleave="this.style.transform='scale(1) rotate(0)'">${p.em}</div>
+    <div>
+      <div style="font-size:11px;color:var(--txt2);margin-bottom:4px">${catN(p.cat)} · <span class="gtag">${p.genero||'Unisex'}</span></div>
+      <div style="font-size:19px;font-weight:600;margin-bottom:4px">${p.n}</div>
+      <div style="font-size:20px;font-weight:600;margin-bottom:10px">${fmt(p.precio)}</div>
+      <p style="font-size:13px;color:var(--txt2);line-height:1.7;margin-bottom:14px">${p.desc}</p>
+      ${p.stock>0?`
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;color:var(--txt2);margin-bottom:7px;font-weight:500">Selecciona tu talla</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap" id="tallasWrap">${tallas}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <span style="font-size:11px;color:var(--txt2)">Cantidad:</span>
+          <button class="qb" onclick="chCant(-1)">−</button>
+          <span id="cantNum" style="font-size:15px;font-weight:600">1</span>
+          <button class="qb" onclick="chCant(1)">+</button>
+          <span style="font-size:11px;color:var(--txt2)">Disponible: ${p.stock}</span>
+        </div>
+        <button class="btn btn-p" style="width:100%;justify-content:center;padding:10px" onclick="addCartDet()">
+          <i class="ti ti-shopping-cart"></i> Agregar al carrito
+        </button>`
+      :'<span class="pill p-d" style="font-size:13px;padding:8px 14px">Producto agotado</span>'}
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--txt2)">
+      <span><i class="ti ti-truck"></i> Envío gratis en compras +S/.150</span>
+      <span><i class="ti ti-refresh"></i> Devoluciones en 30 días</span>
+      <span><i class="ti ti-shield-check"></i> Garantía de autenticidad</span>
+    </div>
+  </div>`;
+}
+
+function selTalla(el,t){
+  document.querySelectorAll('#tallasWrap .filt-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');DB._detTalla=t;
+}
+
+function chCant(d){
+  const p=DB.prodDetalle;if(!p)return;
+  DB._detCant=Math.max(1,Math.min(p.stock,(DB._detCant||1)+d));
+  const el=document.getElementById('cantNum');if(el)el.textContent=DB._detCant;
+}
+
+function addCartDet(){
+  const p=DB.prodDetalle;if(!p)return;
+  addCartWith(p.id,DB._detCant||1,DB._detTalla||'Única');
+}
+
+function addCart(id){
+  const p=prodById(id);if(!p||p.stock===0){toast('Producto agotado',false);return;}
+  popIcon(document.getElementById('pimg_'+id));
+  addCartWith(id,1,(p.tallas||['Única'])[0]);
+}
+
+function addCartWith(id,cant,talla){
+  const p=prodById(id);if(!p)return;
+  if(!DB.carrito)DB.carrito=[];
+  const key=id+'-'+talla;
+  const ex=DB.carrito.find(i=>i.key===key);
+  const tot=(ex?ex.cant:0)+cant;
+  if(tot>p.stock){toast('Stock insuficiente (disponible: '+p.stock+')',false);return;}
+  if(ex)ex.cant+=cant;
+  else DB.carrito.push({key,pid:id,n:p.n,em:p.em,precio:p.precio,talla,cant});
+  const b=document.getElementById('cartBadge');
+  if(b)b.textContent=DB.carrito.reduce((s,i)=>s+i.cant,0);
+  toast(p.n+' agregado al carrito');
+}
+
+function tiendaCarrito(){
+  const c=DB.carrito||[];
+  if(!c.length)return`
+  <div style="padding:10px 16px;background:var(--bg1);border-bottom:0.5px solid var(--brd)">
+    <button class="btn btn-xs" onclick="tiendaGo('catalogo')"><i class="ti ti-arrow-left"></i> Volver</button>
+  </div>
+  <div class="empty" style="padding:48px">
+    <i class="ti ti-shopping-cart" style="font-size:32px;display:block;margin-bottom:10px"></i>
+    Tu carrito está vacío<br>
+    <button class="btn btn-p btn-xs" style="margin-top:12px" onclick="tiendaGo('catalogo')">Ir al catálogo</button>
+  </div>`;
+  const sub=c.reduce((s,i)=>s+i.precio*i.cant,0);
+  const env=sub>=150?0:15;
+  const tot=sub+env;
+  const items=c.map((it,idx)=>`
+    <div class="citem">
+      <div class="cicon">${it.em}</div>
+      <div class="cinfo">
+        <div class="cname">${it.n}</div>
+        <div class="cprice">Talla: ${it.talla} · ${fmt(it.precio)} c/u</div>
+      </div>
+      <div class="qc">
+        <button class="qb" onclick="chCart(${idx},-1)">−</button>
+        <span style="font-size:13px;font-weight:500;min-width:20px;text-align:center">${it.cant}</span>
+        <button class="qb" onclick="chCart(${idx},1)">+</button>
+      </div>
+      <button class="btn btn-xs btn-d" onclick="rmCart(${idx})"><i class="ti ti-x"></i></button>
+    </div>`).join('');
+  return`
+  <div style="padding:10px 16px;background:var(--bg1);border-bottom:0.5px solid var(--brd);display:flex;justify-content:space-between;align-items:center">
+    <button class="btn btn-xs" onclick="tiendaGo('catalogo')"><i class="ti ti-arrow-left"></i> Seguir comprando</button>
+    <span style="font-size:13px;font-weight:500">Tu carrito</span>
+    <button class="btn btn-xs btn-d" onclick="DB.carrito=[];tiendaGo('catalogo')"><i class="ti ti-trash"></i> Vaciar</button>
+  </div>
+  <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
+    ${items}
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Subtotal</span><span>${fmt(sub)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px">
+        <span>Envío</span>
+        <span>${env===0?'<span class="pill p-ok">Gratis</span>':fmt(env)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:600;margin-bottom:14px"><span>Total</span><span>${fmt(tot)}</span></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center;padding:10px" onclick="tiendaGo('checkout')">
+        <i class="ti ti-lock"></i> Proceder al pago
+      </button>
+    </div>
+  </div>`;
+}
+
+function chCart(idx,d){
+  const it=DB.carrito[idx];const p=prodById(it.pid);
+  const nv=it.cant+d;
+  if(nv<1){rmCart(idx);return;}
+  if(nv>p.stock){toast('Stock insuficiente',false);return;}
+  it.cant=nv;tiendaGo('carrito');
+}
+
+function rmCart(idx){DB.carrito.splice(idx,1);tiendaGo('carrito');}
+
+function tiendaCheckout(){
+  const c=DB.carrito||[];
+  const sub=c.reduce((s,i)=>s+i.precio*i.cant,0);
+  const env=sub>=150?0:15;const tot=sub+env;
+  const u=DB.sesion;
+  const metodos=[
+    ['TARJETA','ti-credit-card','Tarjeta de crédito / débito'],
+    ['DEPOSITO_BANCARIO','ti-building-bank','Depósito bancario'],
+    ['EFECTIVO','ti-cash','Pago contra entrega']
+  ];
+  const metHtml=metodos.map(([v,ic,lb])=>`
+    <label style="display:flex;align-items:center;gap:10px;padding:10px;border:0.5px solid ${DB.chkMetodo===v?'var(--red)':'var(--brd)'};border-radius:var(--rad);cursor:pointer;background:${DB.chkMetodo===v?'var(--red-bg)':'transparent'};font-size:13px;margin-bottom:6px">
+      <input type="radio" name="met" value="${v}" ${DB.chkMetodo===v?'checked':''} onchange="DB.chkMetodo='${v}';tiendaGo('checkout')">
+      <i class="ti ${ic}"></i> ${lb}
+    </label>`).join('');
+  const cardInfo=DB.chkMetodo==='TARJETA'?`
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+      <div class="frow"><label>Número de tarjeta</label><input type="text" placeholder="4242 4242 4242 4242" maxlength="19"></div>
+      <div class="fg">
+        <div class="frow"><label>Vencimiento</label><input type="text" placeholder="MM/AA" maxlength="5"></div>
+        <div class="frow"><label>CVV</label><input type="password" placeholder="•••" maxlength="3"></div>
+      </div>
+    </div>`:DB.chkMetodo==='DEPOSITO_BANCARIO'?`
+    <div style="margin-top:10px;background:var(--bg2);border-radius:var(--rad);padding:12px;font-size:12px;line-height:1.8">
+      <div style="font-weight:600;margin-bottom:4px">Datos bancarios Reebok Perú</div>
+      <div>BCP · Cta. Cte: 193-XXXXXXXX-0-XX</div>
+      <div>Interbank · Cta. Cte: 898-XXXXXXXXXX-XX</div>
+      <div style="margin-top:6px;color:var(--txt2)">Adjunta el voucher al confirmar tu pedido.</div>
+    </div>`:'';
+  return`
+  <div class="step-bar">
+    <div class="step dn"><div class="sn"><i class="ti ti-check" style="font-size:9px"></i></div> Carrito</div>
+    <div class="ss"></div>
+    <div class="step on"><div class="sn">2</div> Datos de envío</div>
+    <div class="ss"></div>
+    <div class="step"><div class="sn">3</div> Pago</div>
+    <div class="ss"></div>
+    <div class="step"><div class="sn">4</div> Confirmación</div>
+  </div>
+  <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+    <div class="card"><div class="ct">Datos de entrega</div>
+      <div class="frow"><label>Nombre completo</label><input id="chkN" value="${u.nombre}" placeholder="Tu nombre completo"></div>
+      <div class="frow"><label>Dirección de entrega</label><input id="chkD" value="${u.dir||''}" placeholder="Av. Lima 123, Lima"></div>
+      <div class="frow"><label>Teléfono de contacto</label><input id="chkT" value="${u.tel||''}" placeholder="9XXXXXXXX"></div>
+    </div>
+    <div class="card"><div class="ct">Método de pago</div>
+      ${metHtml}${cardInfo}
+    </div>
+    <div class="card"><div class="ct">Resumen del pedido</div>
+      ${c.map(i=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0">${i.em} ${i.n} (T: ${i.talla}) x${i.cant} <span>${fmt(i.precio*i.cant)}</span></div>`).join('')}
+      <div class="sep"></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Subtotal</span><span>${fmt(sub)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Envío</span><span>${env===0?'<span class="pill p-ok">Gratis</span>':fmt(env)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:600;margin-top:6px"><span>Total</span><span>${fmt(tot)}</span></div>
+    </div>
+    <div class="fr">
+      <button class="btn" onclick="tiendaGo('carrito')"><i class="ti ti-arrow-left"></i> Atrás</button>
+      <button class="btn btn-p" style="flex:1;justify-content:center;padding:10px" onclick="confirmarPedido()">
+        <i class="ti ti-check"></i> Confirmar y realizar pedido
+      </button>
+    </div>
+  </div>`;
+}
+
+function confirmarPedido(){
+  const n=document.getElementById('chkN').value.trim();
+  const d=document.getElementById('chkD').value.trim();
+  if(!n||!d){toast('Completa tu nombre y dirección de entrega',false);return;}
+  const c=DB.carrito||[];
+  const sub=c.reduce((s,i)=>s+i.precio*i.cant,0);
+  const env=sub>=150?0:15;
+  const u=DB.sesion;
+  const numPed='RBK-'+String(DB.pId).padStart(4,'0');
+  c.forEach(i=>{const p=prodById(i.pid);if(p)p.stock-=i.cant;});
+  DB.pedidos.push({
+    id:DB.pId++,numPed,cliente:u.nombre,clienteId:u.id,
+    clienteDir:d,items:[...c],total:sub+env,
+    metodo:DB.chkMetodo,fecha:new Date().toLocaleDateString('es-PE'),
+    estado:'PENDIENTE',pagado:false
+  });
+  DB._lastNumPed=numPed;DB._lastTotal=sub+env;DB._lastItems=[...c];
+  DB.carrito=[];
+  tiendaGo('confirm');
+}
+
+function tiendaConfirm(){
+  const np=DB._lastNumPed||'RBK-0001';
+  const tot=DB._lastTotal||0;
+  const items=DB._lastItems||[];
+  return`
+  <div class="confirm">
+    <div class="ck"><i class="ti ti-check" style="color:var(--ok-txt);font-size:26px"></i></div>
+    <div style="font-size:19px;font-weight:600">¡Pedido confirmado!</div>
+    <div style="font-size:13px;color:var(--txt2)">Tu pedido <strong>${np}</strong> fue registrado exitosamente</div>
+    <div style="background:var(--bg2);border-radius:var(--rad2);padding:14px;width:100%;margin-top:4px">
+      ${items.map(i=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0">${i.em} ${i.n} x${i.cant}<span>${fmt(i.precio*i.cant)}</span></div>`).join('')}
+      <div class="sep"></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:600">Total pagado <span>${fmt(tot)}</span></div>
+    </div>
+    <div style="font-size:12px;color:var(--txt2);text-align:center;line-height:1.8">
+      <i class="ti ti-truck"></i> Entrega estimada: 2 a 4 días hábiles<br>
+      <i class="ti ti-phone"></i> Te contactaremos para coordinar la entrega
+    </div>
+    <div class="fr">
+      <button class="btn btn-xs" onclick="tiendaGo('mispedidos')"><i class="ti ti-list"></i> Mis pedidos</button>
+      <button class="btn btn-p btn-xs" onclick="tiendaGo('catalogo')"><i class="ti ti-shopping-bag"></i> Seguir comprando</button>
+    </div>
+  </div>`;
+}
+
+function trackerHTML(p){
+  if(p.estado==='CANCELADO'){
+    return `<div style="padding:6px 0 2px"><span class="pill p-d">Pedido cancelado</span></div>`;
+  }
+  const steps=[
+    {label:'Pedido realizado',done:true},
+    {label:'Pago confirmado',done:!!p.pagado},
+    {label:'Enviado',done:p.estado==='ENVIADO'||p.estado==='ENTREGADO'},
+    {label:'Entregado',done:p.estado==='ENTREGADO'},
+  ];
+  let curIdx=steps.findIndex(s=>!s.done);
+  if(curIdx===-1)curIdx=steps.length-1;
+  return `<div style="display:flex;align-items:flex-start;padding:8px 0 4px;overflow-x:auto">
+    ${steps.map((s,i)=>`
+      <div style="display:flex;align-items:center;flex-shrink:0">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;min-width:62px">
+          <div class="sn" style="${s.done?'background:var(--ok-bg);color:var(--ok-txt);border-color:transparent':i===curIdx?'background:var(--red);color:#fff;border-color:var(--red)':''}">
+            ${s.done?'<i class="ti ti-check" style="font-size:9px"></i>':(i+1)}
+          </div>
+          <span style="font-size:9px;color:${s.done||i===curIdx?'var(--txt1)':'var(--txt2)'};text-align:center;line-height:1.2">${s.label}</span>
+        </div>
+        ${i<steps.length-1?`<div class="ss" style="width:22px;flex:none;margin:0 2px;${s.done?'background:var(--ok-txt)':''}"></div>`:''}
+      </div>`).join('')}
+  </div>`;
+}
+
+function tiendaMisPedidos(){
+  const u=DB.sesion;
+  const mis=DB.pedidos.filter(p=>p.clienteId===u.id);
+  const html=mis.length?mis.slice().reverse().map(p=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div>
+          <div style="font-weight:600;font-size:14px">${p.numPed||'#'+p.id}</div>
+          <div style="font-size:11px;color:var(--txt2)">${p.fecha}</div>
+        </div>
+        ${pillE(p.estado)}
+      </div>
+      <div style="border-top:0.5px solid var(--brd);border-bottom:0.5px solid var(--brd)">${trackerHTML(p)}</div>
+      <div style="margin-top:8px">${(p.items||[]).map(i=>`<div style="font-size:12px;color:var(--txt2);padding:2px 0">${i.em} ${i.n} (T: ${i.talla}) x${i.cant}</div>`).join('')}</div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:0.5px solid var(--brd);font-size:13px">
+        <span>${(p.metodo||'').replace('_',' ')}</span>
+        <strong>${fmt(p.total)}</strong>
+      </div>
+    </div>`).join(''):`
+    <div class="empty" style="padding:48px">
+      <i class="ti ti-box" style="font-size:32px;display:block;margin-bottom:10px"></i>
+      Aún no tienes pedidos<br>
+      <button class="btn btn-p btn-xs" style="margin-top:12px" onclick="tiendaGo('catalogo')">Ir al catálogo</button>
+    </div>`;
+  return`
+  <div style="padding:10px 16px;background:var(--bg1);border-bottom:0.5px solid var(--brd);display:flex;justify-content:space-between;align-items:center">
+    <button class="btn btn-xs" onclick="tiendaGo('catalogo')"><i class="ti ti-arrow-left"></i> Volver</button>
+    <span style="font-size:14px;font-weight:500">Mis pedidos</span>
+    <span></span>
+  </div>
+  <div style="padding:14px;display:flex;flex-direction:column;gap:10px">${html}</div>`;
+}
+
+render();
+</script>
+</body>
+</html>
